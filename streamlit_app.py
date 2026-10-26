@@ -1,6 +1,6 @@
 """
-SCD-ActiPredict AI - Community SCD Older Adults Physical Inactivity Risk Prediction System
-Production-Grade Streamlit Web Application
+SCD-ActiPredict AI v2.0 - Community SCD Older Adults Physical Inactivity Risk Prediction System
+Production-Grade Streamlit Web Application (Curated 6 Core Independent Clinical Features)
 Compatible with Streamlit Community Cloud (GitHub: hhini/old_anactived)
 """
 
@@ -15,1056 +15,923 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 # ---------------------------------------------------------------------------
-# Page Configuration
+# Page Configuration & Metadata
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="SCD-ActiPredict AI | 社区SCD老年人身体活动不足风险智能预测系统",
+    page_title="SCD-ActiPredict AI | 社区SCD老年人活动不足风险预测系统",
     page_icon="🏃‍♂️",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed"
 )
 
 # ---------------------------------------------------------------------------
-# Theme Management
+# High-End Design System (Apple / Vercel / Stripe Aesthetic CSS)
 # ---------------------------------------------------------------------------
-if "theme" not in st.session_state:
-    st.session_state.theme = "light"
-
-def toggle_theme():
-    st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
-
-IS_DARK = st.session_state.theme == "dark"
-
-# ---------------------------------------------------------------------------
-# Inject Advanced Big-Tech CSS Design System
-# ---------------------------------------------------------------------------
-CSS_LIGHT = """
+st.markdown("""
 <style>
-:root {
-    --bg-main: #f8fafc;
-    --bg-card: #ffffff;
-    --bg-subtle: #f1f5f9;
-    --border-card: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
-    --accent-primary: #4f46e5;
-    --accent-light: #e0e7ff;
-    --emerald: #10b981;
-    --emerald-bg: rgba(16, 185, 129, 0.12);
-    --amber: #f59e0b;
-    --amber-bg: rgba(245, 158, 11, 0.12);
-    --rose: #ef4444;
-    --rose-bg: rgba(239, 68, 68, 0.12);
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-}
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --font-main: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --bg-body: #F8FAFC;
+        --bg-card: #FFFFFF;
+        --bg-subtle: #F1F5F9;
+        --border-subtle: #E2E8F0;
+        --border-focus: #3B82F6;
+        --text-primary: #0F172A;
+        --text-secondary: #475569;
+        --text-muted: #94A3B8;
+        --accent-blue: #2563EB;
+        --accent-indigo: #4F46E5;
+        --accent-purple: #7C3AED;
+        --emerald: #10B981;
+        --emerald-bg: #ECFDF5;
+        --amber: #F59E0B;
+        --amber-bg: #FFFBEB;
+        --crimson: #EF4444;
+        --crimson-bg: #FEF2F2;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    }
+
+    html, body, [class*="css"] {
+        font-family: var(--font-main);
+        color: var(--text-primary);
+    }
+
+    .main .block-container {
+        padding-top: 1.2rem;
+        padding-bottom: 3.5rem;
+        max-width: 1400px;
+    }
+
+    /* Style Streamlit Containers as Cards */
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle) !important;
+        border-radius: 16px !important;
+        box-shadow: var(--shadow-sm);
+        padding: 4px 6px;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+        box-shadow: var(--shadow-md);
+        border-color: rgba(37, 99, 235, 0.25) !important;
+    }
+
+    /* Top Floating Header */
+    .hero-navbar {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(124, 58, 237, 0.06) 100%);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 18px;
+        padding: 18px 24px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .brand-title {
+        font-size: 1.45rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #7C3AED 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 3px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .brand-subtitle {
+        font-size: 0.84rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    /* Badges & Pills */
+    .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+    }
+
+    .badge-champion {
+        background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+        color: white;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    }
+
+    .badge-verified {
+        background: var(--emerald-bg);
+        color: #065F46;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-normal {
+        background: var(--emerald-bg);
+        color: #047857;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .badge-warn {
+        background: var(--amber-bg);
+        color: #B45309;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .badge-danger {
+        background: var(--crimson-bg);
+        color: #B91C1C;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .card-title-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .card-title-text {
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .card-desc {
+        font-size: 0.80rem;
+        color: var(--text-muted);
+        margin-top: -6px;
+        margin-bottom: 14px;
+    }
+
+    /* Preset Selection Bar */
+    .preset-header {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Scoreboard Metrics */
+    .metric-score-box {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(79, 70, 229, 0.08) 100%);
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        border-radius: 14px;
+        padding: 14px 16px;
+        text-align: center;
+        margin-bottom: 14px;
+    }
+
+    .metric-score-val {
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 3px;
+    }
+
+    .metric-score-lbl {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Points breakdown chips */
+    .points-chip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 11px;
+        background: var(--bg-subtle);
+        border-radius: 8px;
+        margin-bottom: 6px;
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+
+    .points-val {
+        font-weight: 700;
+        color: var(--accent-blue);
+        font-family: monospace;
+        font-size: 0.88rem;
+    }
+
+    /* Prescription Card */
+    .rx-card {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(6, 182, 212, 0.06) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-top: 14px;
+    }
+
+    .rx-title {
+        font-size: 0.90rem;
+        font-weight: 700;
+        color: #047857;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .rx-text {
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        line-height: 1.55;
+    }
+
+    /* Custom Streamlit Tabs Styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: var(--bg-subtle);
+        padding: 6px;
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 42px;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        padding: 0 18px;
+        transition: all 0.2s ease;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background-color: var(--bg-card) !important;
+        color: var(--accent-blue) !important;
+        box-shadow: var(--shadow-sm);
+    }
 </style>
-"""
-
-CSS_DARK = """
-<style>
-:root {
-    --bg-main: #09090b;
-    --bg-card: #121217;
-    --bg-subtle: #18181f;
-    --border-card: #27272f;
-    --border-hover: #3f3f4e;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --accent-primary: #6366f1;
-    --accent-light: rgba(99, 102, 241, 0.2);
-    --emerald: #34d399;
-    --emerald-bg: rgba(52, 211, 153, 0.15);
-    --amber: #fbbf24;
-    --amber-bg: rgba(251, 191, 36, 0.15);
-    --rose: #f87171;
-    --rose-bg: rgba(248, 113, 113, 0.15);
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
-}
-</style>
-"""
-
-COMMON_CSS = """
-<style>
-/* Global App Canvas */
-header[data-testid="stHeader"], footer, [data-testid="stToolbar"] {
-    display: none !important;
-}
-html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"], .main, .block-container {
-    background-color: var(--bg-main) !important;
-    color: var(--text-primary) !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif !important;
-    -webkit-font-smoothing: antialiased;
-}
-.block-container {
-    padding: 1.5rem 2.5rem 3rem !important;
-    max-width: 1400px !important;
-}
-
-/* Big-Tech Top Navbar */
-.top-navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 16px;
-    padding: 1.1rem 1.6rem;
-    margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-md);
-}
-.brand-group {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-.brand-icon {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 22px;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-}
-.brand-title {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
-.brand-subtitle {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-top: 2px;
-}
-
-/* Badges */
-.badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-.badge-champion {
-    background: rgba(79, 70, 229, 0.12);
-    color: var(--accent-primary);
-    border: 1px solid rgba(79, 70, 229, 0.25);
-}
-.badge-low {
-    background: var(--emerald-bg);
-    color: var(--emerald);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-.badge-mod {
-    background: var(--amber-bg);
-    color: var(--amber);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-.badge-high {
-    background: var(--rose-bg);
-    color: var(--rose);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-/* Apple-style Cards */
-.glass-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    margin-bottom: 1.25rem;
-}
-.glass-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-md);
-}
-.card-header-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 0.35rem;
-}
-.card-header-desc {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-}
-
-/* Metric Display Blocks */
-.hero-risk-box {
-    text-align: center;
-    padding: 1.6rem 1rem;
-    border-radius: 16px;
-    margin-bottom: 1.25rem;
-    border: 1px solid var(--border-card);
-}
-.hero-risk-pct {
-    font-size: 3.2rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    margin: 0.5rem 0;
-}
-.hero-risk-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* Section Header Typography */
-.section-headline {
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--text-primary);
-    margin-bottom: 0.3rem;
-}
-.section-subtext {
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-}
-
-/* Pill Tabs */
-button[data-baseweb="tab"] {
-    background: transparent !important;
-    color: var(--text-secondary) !important;
-    font-size: 0.92rem !important;
-    font-weight: 600 !important;
-    padding: 0.65rem 1.4rem !important;
-    border: 1px solid transparent !important;
-    border-radius: 10px !important;
-    transition: all 0.2s ease;
-}
-button[data-baseweb="tab"]:hover {
-    color: var(--text-primary) !important;
-    background: var(--bg-subtle) !important;
-}
-button[data-baseweb="tab"][aria-selected="true"] {
-    color: #ffffff !important;
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35) !important;
-}
-[data-baseweb="tab-highlight"], [data-baseweb="tab-border"] {
-    display: none !important;
-}
-[data-baseweb="tab-list"] {
-    gap: 8px !important;
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-card) !important;
-    border-radius: 14px !important;
-    padding: 6px !important;
-    margin-bottom: 1.8rem !important;
-    box-shadow: var(--shadow-sm) !important;
-}
-
-/* Action button */
-.stButton > button {
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    transition: all 0.2s ease !important;
-}
-</style>
-"""
-
-st.markdown(CSS_DARK if IS_DARK else CSS_LIGHT, unsafe_allow_html=True)
-st.markdown(COMMON_CSS, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
-# Data & Model Loader (Cached & Resilient)
+# Mathematical Engine & 6-Feature Prediction Architecture
 # ---------------------------------------------------------------------------
-@st.cache_resource
-def load_prediction_resources():
-    model_path = os.path.join("models", "best_model.pkl")
-    scaler_path = os.path.join("models", "standard_scaler.pkl")
-    
-    if os.path.exists(model_path) and os.path.exists(scaler_path):
-        try:
-            model = joblib.load(model_path)
-            scaler = joblib.load(scaler_path)
-            return model, scaler, True
-        except Exception as e:
-            st.warning(f"Model load notice: {e}. Fallback formula enabled.")
-            
-    # Fallback to multivariable logistic regression parameters if file missing or version conflict
-    return None, None, False
-
-model, scaler, model_loaded = load_prediction_resources()
-
-# Expected feature list in strict scaler order
-FEATURE_COLS = [
-    'Age', 'Monthly_Income', 'Trauma_History', 'BMI', 'Hemoglobin',
-    'GSES_Score', 'Social_Activity_Freq', 'Sedentary_Hobby_Non_Intellectual',
-    'SSPA_Score', 'Community_Facility_Score', 'Community_Activity_Score'
+FEATURES_6 = [
+    'Sedentary_Hobby_Non_Intellectual',
+    'Trauma_History',
+    'BMI',
+    'Age',
+    'Hemoglobin',
+    'Monthly_Income'
 ]
 
-# Scaler fallback parameters (derived from 385 cohort)
-SCALER_MEANS = {
-    'Age': 70.286, 'Monthly_Income': 1.918, 'Trauma_History': 0.175, 'BMI': 22.180,
-    'Hemoglobin': 127.004, 'GSES_Score': 18.937, 'Social_Activity_Freq': 0.978,
-    'Sedentary_Hobby_Non_Intellectual': 0.257, 'SSPA_Score': 10.937,
-    'Community_Facility_Score': 8.446, 'Community_Activity_Score': 4.717
-}
-SCALER_STDS = {
-    'Age': 5.076, 'Monthly_Income': 1.060, 'Trauma_History': 0.380, 'BMI': 1.940,
-    'Hemoglobin': 9.910, 'GSES_Score': 3.106, 'Social_Activity_Freq': 0.684,
-    'Sedentary_Hobby_Non_Intellectual': 0.437, 'SSPA_Score': 3.829,
-    'Community_Facility_Score': 1.621, 'Community_Activity_Score': 2.275
+# Exact Statsmodels Multivariable Logistic Regression Parameters
+LOGIT_PARAMS_6 = {
+    'const': -5.1264,
+    'Sedentary_Hobby_Non_Intellectual': 2.0977, # aOR = 8.15, P < 0.0001 (Risk)
+    'Trauma_History': 1.9599,                  # aOR = 7.10, P < 0.0001 (Risk)
+    'BMI': 0.2330,                             # aOR = 1.26, P = 0.0063 (Risk)
+    'Age': 0.0736,                             # aOR = 1.08, P = 0.0202 (Risk)
+    'Hemoglobin': -0.0460,                      # aOR = 0.95, P = 0.0082 (Protective)
+    'Monthly_Income': -0.5338                  # aOR = 0.59, P = 0.0017 (Protective)
 }
 
-# Multivariable Logistic Regression Parametric Fallback (Table 5 MLE Parameters)
-LOGIT_COEFS = {
-    'const': -0.7986,
-    'Sedentary_Hobby_Non_Intellectual': 1.7441,
-    'Trauma_History': 1.6394,
-    'BMI': 0.2200,
-    'Hemoglobin': -0.0427,
-    'Monthly_Income': -0.4350,
-    'Age': 0.0603,
-    'Community_Activity_Score': -0.1421,
-    'Social_Activity_Freq': -0.3825,
-    'Community_Facility_Score': -0.1600,
-    'SSPA_Score': -0.0479,
-    'GSES_Score': -0.0349
-}
+# Bedside Nomogram 100-Point Geometric Scale Alignment Metrics (MAX_EFFECT_SPAN = BMI span: 2.7959)
+MAX_SPAN = 2.7959
 
-def predict_risk_probability(feature_dict):
-    """Predicts physical inactivity risk probability using champion XGBoost or robust Logit fallback."""
-    df_raw = pd.DataFrame([feature_dict])[FEATURE_COLS]
+@st.cache_resource
+def load_6feature_models():
+    """Loads 6-feature trained XGBoost model and scaler if available."""
+    xgb_path = os.path.join("models", "best_model_6features.pkl")
+    scaler_path = os.path.join("models", "standard_scaler_6features.pkl")
     
-    if model_loaded:
+    if os.path.exists(xgb_path) and os.path.exists(scaler_path):
         try:
-            X_scaled = scaler.transform(df_raw)
-            prob = float(model.predict_proba(X_scaled)[0, 1])
-            return prob, "XGBoost (Champion ML)"
+            model = joblib.load(xgb_path)
+            scaler = joblib.load(scaler_path)
+            return model, scaler, True
         except Exception:
             pass
-            
-    # Mathematical Logit Sigmoid Fallback
-    lp = LOGIT_COEFS['const']
-    for feat in FEATURE_COLS:
-        lp += LOGIT_COEFS[feat] * df_raw.loc[0, feat]
-    prob = 1.0 / (1.0 + np.exp(-lp))
-    return float(prob), "Multivariable Logistic Regression (MLE)"
+    return None, None, False
 
-def compute_waterfall_contributions(feature_dict):
-    """Calculates directional risk impact of each predictor against cohort baseline."""
-    contributions = []
+xgb_model_6, scaler_6, xgb_loaded = load_6feature_models()
+
+def compute_nomogram_points(patient):
+    """Calculates exact bedside clinical Nomogram points (0 ~ 450 total scale)."""
+    bmi_val = np.clip(patient['BMI'], 18.0, 30.0)
+    pts_bmi = 0.2330 * (bmi_val - 18.0) / MAX_SPAN * 100.0
+
+    pts_hobby = 75.028 * float(patient['Sedentary_Hobby_Non_Intellectual'])
+    pts_trauma = 70.101 * float(patient['Trauma_History'])
+
+    age_val = np.clip(patient['Age'], 60.0, 85.0)
+    pts_age = 0.0736 * (age_val - 60.0) / MAX_SPAN * 100.0
+
+    hb_val = np.clip(patient['Hemoglobin'], 100.0, 160.0)
+    pts_hb = 0.0460 * (160.0 - hb_val) / MAX_SPAN * 100.0
+
+    inc_val = np.clip(patient['Monthly_Income'], 0.0, 4.0)
+    pts_inc = 0.5338 * (4.0 - inc_val) / MAX_SPAN * 100.0
+
+    total_pts = pts_bmi + pts_hobby + pts_trauma + pts_age + pts_hb + pts_inc
     
-    # Biological / Clinical Directional Weights
-    weights = {
-        'Sedentary_Hobby_Non_Intellectual': ('静态非益智类爱好', 1.7441, SCALER_MEANS['Sedentary_Hobby_Non_Intellectual']),
-        'Trauma_History': ('既往跌倒外伤史', 1.6394, SCALER_MEANS['Trauma_History']),
-        'BMI': ('体质指数 (BMI)', 0.2200, SCALER_MEANS['BMI']),
-        'Age': ('年龄（岁）', 0.0603, SCALER_MEANS['Age']),
-        'Monthly_Income': ('人均月收入', -0.4350, SCALER_MEANS['Monthly_Income']),
-        'Hemoglobin': ('血红蛋白水平', -0.0427, SCALER_MEANS['Hemoglobin']),
-        'Community_Facility_Score': ('社区设施支持', -0.1600, SCALER_MEANS['Community_Facility_Score']),
-        'Community_Activity_Score': ('社区活动支持', -0.1421, SCALER_MEANS['Community_Activity_Score']),
-        'Social_Activity_Freq': ('社交活动频率', -0.3825, SCALER_MEANS['Social_Activity_Freq']),
-        'SSPA_Score': ('社会支持总分', -0.0479, SCALER_MEANS['SSPA_Score']),
-        'GSES_Score': ('自我效能感', -0.0349, SCALER_MEANS['GSES_Score']),
+    breakdown = {
+        'BMI': (pts_bmi, 100.0, "体质指数 (BMI)", "危险因素"),
+        'Sedentary_Hobby_Non_Intellectual': (pts_hobby, 75.0, "静态非益智爱好", "危险因素"),
+        'Trauma_History': (pts_trauma, 70.1, "跌倒外伤病史", "危险因素"),
+        'Age': (pts_age, 65.8, "高龄增长", "危险因素"),
+        'Hemoglobin': (pts_hb, 98.7, "血红蛋白水平", "保护因素"),
+        'Monthly_Income': (pts_inc, 76.4, "人均月收入", "保护因素"),
     }
-    
-    for k, (name_cn, coef, base_val) in weights.items():
-        delta = (feature_dict[k] - base_val) * coef
-        contributions.append({
-            'Feature': name_cn,
-            'Delta': delta,
-            'Is_Risk': delta > 0,
-            'Magnitude': abs(delta)
-        })
-        
-    df_contr = pd.DataFrame(contributions).sort_values(by='Magnitude', ascending=True)
-    return df_contr
+    return total_pts, breakdown
+
+def predict_physical_inactivity(patient):
+    """Computes predicted probability of physical inactivity using 100% exact math logit closed loop."""
+    lp = LOGIT_PARAMS_6['const']
+    lp += LOGIT_PARAMS_6['Sedentary_Hobby_Non_Intellectual'] * patient['Sedentary_Hobby_Non_Intellectual']
+    lp += LOGIT_PARAMS_6['Trauma_History'] * patient['Trauma_History']
+    lp += LOGIT_PARAMS_6['BMI'] * patient['BMI']
+    lp += LOGIT_PARAMS_6['Age'] * patient['Age']
+    lp += LOGIT_PARAMS_6['Hemoglobin'] * patient['Hemoglobin']
+    lp += LOGIT_PARAMS_6['Monthly_Income'] * patient['Monthly_Income']
+
+    prob = 1.0 / (1.0 + np.exp(-lp))
+    return float(prob), "临床列线图标准模型 (100% 绝对数学对准)"
 
 # ---------------------------------------------------------------------------
-# Top Floating Navigation Bar
+# Hero Navbar
 # ---------------------------------------------------------------------------
-nav_c1, nav_c2 = st.columns([10, 2])
-with nav_c1:
-    st.markdown(f"""
-    <div class="top-navbar">
-        <div class="brand-group">
-            <div class="brand-icon">🏃‍♂️</div>
-            <div>
-                <div class="brand-title">SCD-ActiPredict AI · 社区SCD老年人身体活动不足风险智能预测系统</div>
-                <div class="brand-subtitle">国家老年疾病临床医学研究网络规范 · TRIPOD+AI 2024 · 赣州前瞻队列 (N=385)</div>
-            </div>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-            <span class="badge-pill badge-champion">🟢 XGBoost 冠军模型 (AUC 0.832)</span>
-            <span class="badge-pill badge-pill" style="background:var(--bg-subtle); color:var(--text-secondary); border:1px solid var(--border-card);">🎯 灵敏度 75.6%</span>
-            <a href="https://github.com/hhini/old_anactived" target="_blank" style="text-decoration:none;">
-                <span class="badge-pill badge-pill" style="background:rgba(79,70,229,0.1); color:var(--accent-primary); border:1px solid rgba(79,70,229,0.3);">💻 GitHub 源码</span>
-            </a>
-        </div>
+st.markdown("""
+<div class="hero-navbar">
+    <div>
+        <div class="brand-title">🏃‍♂️ SCD-ActiPredict AI <span style="font-size:0.85rem; font-weight:600; padding:2px 8px; border-radius:6px; background:rgba(37,99,235,0.1); color:#2563EB;">v2.0 纯6特征极简版</span></div>
+        <div class="brand-subtitle">社区主观认知下降（SCD）老年人身体活动不足风险智能预测与临床决策支持系统</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with nav_c2:
-    theme_text = "☀️ 浅色模式" if IS_DARK else "🌙 深色模式"
-    st.button(theme_text, on_click=toggle_theme, use_container_width=True)
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <span class="badge-pill badge-champion">⚡ 6项核心独立特征闭环</span>
+        <span class="badge-pill badge-verified">🎯 临床列线图 100% 对齐</span>
+        <a href="https://github.com/hhini/old_anactived" target="_blank" style="text-decoration:none;">
+            <span class="badge-pill" style="background:#F1F5F9; color:#334155; border:1px solid #CBD5E1;">⭐ GitHub 源码</span>
+        </a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
-# Navigation Tabs
+# Tab Navigation
 # ---------------------------------------------------------------------------
-tab_calc, tab_arena, tab_xai, tab_guideline = st.tabs([
-    "🧮 临床智能风险计算器 (Risk Calculator)",
-    "🏆 七大算法竞技场 (Model Arena)",
-    "🔬 特征归因与列线图 (XAI & Nomogram)",
-    "📘 社区分级防控与干预指南 (Action Plan)"
+tab1, tab2, tab3, tab4 = st.tabs([
+    "🧮 6项指标临床智能风险计算器",
+    "🏆 7大算法全景评测排行榜",
+    "🔬 6项核心特征可解释性与床旁列线图",
+    "📘 社区分级干预与适老微运动 SOP"
 ])
 
 # ===========================================================================
-# TAB 1: CLINICAL RISK CALCULATOR
+# TAB 1: 6-FEATURE CLINICAL PREDICTION CALCULATOR
 # ===========================================================================
-with tab_calc:
-    st.markdown('<div class="section-headline">社区老年主观认知下降（SCD）个体化身体活动不足风险智能测算</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtext">输入受试老年人 11 项核心生物医学与社会生态学指标，系统实时基于最佳 XGBoost 算法测算活动不足风险概率，触发双轨决策切点预警，并开具反事实生活方式处方。</div>', unsafe_allow_html=True)
+with tab1:
+    st.markdown('<div class="preset-header">⚡ 典型临床病例一键快速装填 (Quick Presets)</div>', unsafe_allow_html=True)
     
-    # Case Presets Bar
-    preset_col1, preset_col2, preset_col3, preset_col4 = st.columns(4)
-    with preset_col1:
-        if st.button("🔴 载入典型高危病例 (Case A)", use_container_width=True):
-            st.session_state.inp_age = 74
-            st.session_state.inp_inc = 0 # <1000元
-            st.session_state.inp_trauma = 1 # 有外伤
-            st.session_state.inp_bmi = 28.5
-            st.session_state.inp_hb = 112.0 # 贫血
-            st.session_state.inp_gses = 14.0 # 低效能
-            st.session_state.inp_social = 0 # 偶尔
-            st.session_state.inp_hobby = 1 # 有静态爱好
-            st.session_state.inp_sspa = 6.0 # 低支持
-            st.session_state.inp_fac = 5.0 # 设施一般
-            st.session_state.inp_act = 3.0 # 活动支持弱
-    with preset_col2:
-        if st.button("🟢 载入典型低危老人 (Case B)", use_container_width=True):
-            st.session_state.inp_age = 65
-            st.session_state.inp_inc = 3 # 3000~4999元
-            st.session_state.inp_trauma = 0 # 无外伤
-            st.session_state.inp_bmi = 21.5
-            st.session_state.inp_hb = 138.0 # 正常
-            st.session_state.inp_gses = 26.0 # 高效能
-            st.session_state.inp_social = 2 # 经常
-            st.session_state.inp_hobby = 0 # 无静态爱好
-            st.session_state.inp_sspa = 18.0 # 良好支持
-            st.session_state.inp_fac = 11.0 # 优质设施
-            st.session_state.inp_act = 10.0 # 丰富组织
-    with preset_col3:
-        if st.button("🟡 载入中危亚健康过渡老人", use_container_width=True):
-            st.session_state.inp_age = 70
-            st.session_state.inp_inc = 2 # 1000~2999元
-            st.session_state.inp_trauma = 0
-            st.session_state.inp_bmi = 24.2
-            st.session_state.inp_hb = 126.0
-            st.session_state.inp_gses = 19.0
-            st.session_state.inp_social = 1 # 有时
-            st.session_state.inp_hobby = 1
-            st.session_state.inp_sspa = 11.0
-            st.session_state.inp_fac = 8.0
-            st.session_state.inp_act = 5.0
-    with preset_col4:
-        if st.button("🔄 重置为社区中位基线值", use_container_width=True):
-            st.session_state.inp_age = 71
-            st.session_state.inp_inc = 2
-            st.session_state.inp_trauma = 0
-            st.session_state.inp_bmi = 22.2
-            st.session_state.inp_hb = 127.0
-            st.session_state.inp_gses = 19.0
-            st.session_state.inp_social = 1
-            st.session_state.inp_hobby = 0
-            st.session_state.inp_sspa = 11.0
-            st.session_state.inp_fac = 8.0
-            st.session_state.inp_act = 5.0
-
-    # Initialize session state if not set
-    if "inp_age" not in st.session_state:
-        st.session_state.inp_age = 72
-        st.session_state.inp_inc = 2
-        st.session_state.inp_trauma = 1
-        st.session_state.inp_bmi = 24.8
-        st.session_state.inp_hb = 122.0
-        st.session_state.inp_gses = 18.0
-        st.session_state.inp_social = 1
-        st.session_state.inp_hobby = 1
-        st.session_state.inp_sspa = 10.0
-        st.session_state.inp_fac = 8.0
-        st.session_state.inp_act = 4.0
-
-    calc_left, calc_right = st.columns([7, 5])
+    pre_col1, pre_col2, pre_col3, pre_col4 = st.columns(4)
     
-    with calc_left:
-        # Card 1: Demographics & Physiological Health
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🩺 生理机能与健康状况 (Physiological & Clinical Factors)</div>
-            <div class="card-header-desc">涵盖心肺与代谢负荷、机体耐力底座及关节骨骼损伤病史</div>
-        """, unsafe_allow_html=True)
-        
-        c_p1, c_p2 = st.columns(2)
-        with c_p1:
-            inp_age = st.slider("1. 年龄（岁）", min_value=60, max_value=90, value=int(st.session_state.inp_age), step=1, help="增龄导致骨骼肌纤维萎缩与心肺摄氧量自然衰退 (aOR=1.06)")
-            inp_bmi = st.slider("2. 体质指数 BMI (kg/m²)", min_value=16.0, max_value=35.0, value=float(st.session_state.inp_bmi), step=0.1, help="BMI每增加1 kg/m²，关节机械负荷与活动不足几率递增24.6% (aOR=1.25)")
-            inp_hb = st.slider("3. 血红蛋白水平 (g/L)", min_value=90.0, max_value=170.0, value=float(st.session_state.inp_hb), step=1.0, help="机体组织携氧与有氧运动耐力底座，<120 g/L提示贫血耐力受损 (aOR=0.96)")
-        with c_p2:
-            trauma_opts = {0: "无外伤跌倒史 (No)", 1: "有跌倒外伤或骨折史 (Yes)"}
-            inp_trauma = st.radio("4. 既往外伤骨折病史", options=[0, 1], format_func=lambda x: trauma_opts[x], index=int(st.session_state.inp_trauma), help="跌倒外伤遗留慢性关节疼痛并激发强烈的'跌倒恐惧综合征' (aOR=5.15)")
-            inc_opts = {0: "<1000 元/月", 1: "1000~1999 元/月", 2: "2000~2999 元/月", 3: "3000~4999 元/月", 4: "≥5000 元/月"}
-            inp_inc = st.selectbox("5. 家庭人均月收入阶梯", options=[0, 1, 2, 3, 4], format_func=lambda x: inc_opts[x], index=int(st.session_state.inp_inc), help="经济资本充裕度赋予更强的健康投入与文体健身参与能力 (aOR=0.65)")
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Card 2: Behavioral & Social Ecological Factors
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🏘️ 行为生活方式、心理与社区环境 (Behavioral & Ecological Factors)</div>
-            <div class="card-header-desc">涵盖日常休闲习惯、社会支持网络、自我效能信念与社区适老设施环境</div>
-        """, unsafe_allow_html=True)
-        
-        c_b1, c_b2 = st.columns(2)
-        with c_b1:
-            hobby_opts = {0: "否 (无静态不良爱好，平时喜爱散步/太极/阅读等)", 1: "是 (长期久坐看电视、闲坐发呆等静态非益智类爱好)"}
-            inp_hobby = st.radio("6. 静态非益智类休闲爱好", options=[0, 1], format_func=lambda x: hobby_opts[x], index=int(st.session_state.inp_hobby), help="全模型最强独立致病危险因素！低脑耗娱乐挤占运动物理时间窗口并钝化多巴胺犒赏 (aOR=5.72)")
-            soc_opts = {0: "偶尔参与 (Seldom)", 1: "有时参与 (Sometimes)", 2: "经常参与 (Often)"}
-            inp_social = st.selectbox("7. 社交活动参与频率", options=[0, 1, 2], format_func=lambda x: soc_opts[x], index=int(st.session_state.inp_social), help="融入社区熟人社群能显著提高结伴出行与集体跳操几率")
-            inp_gses = st.slider("8. GSES 一般自我效能感得分 (10~30分)", min_value=10.0, max_value=30.0, value=float(st.session_state.inp_gses), step=0.5, help="个体克服关节酸痛、天气不佳等阻力坚持运动的内在心理掌控信念")
-        with c_b2:
-            inp_sspa = st.slider("9. SSPA 体力活动社会支持得分 (5~25分)", min_value=5.0, max_value=25.0, value=float(st.session_state.inp_sspa), step=0.5, help="来自配偶、子女及同伴的情感鼓励、生活照料与共同锻炼督导 (≥10分为良好)")
-            inp_fac = st.slider("10. 社区适老健身设施支持得分 (3~12分)", min_value=3.0, max_value=12.0, value=float(st.session_state.inp_fac), step=0.5, help="社区步道平整度、无障碍设施、健身器械丰富度及遮阳避雨休息点可及性")
-            inp_act = st.slider("11. 社区活动组织支持得分 (3~12分)", min_value=3.0, max_value=12.0, value=float(st.session_state.inp_act), step=0.5, help="居委会与社区卫生服务中心定期组织的老年体艺比赛、八段锦太极培训频度")
-        st.markdown("</div>", unsafe_allow_html=True)
+    with pre_col1:
+        if st.button("🟢 典型低危老人 (活力健康标杆)", use_container_width=True, help="65岁, BMI 21.0, 无外伤, 无静态爱好, 月入≥4000, Hb 150"):
+            st.session_state.calc_age = 65
+            st.session_state.calc_bmi = 21.0
+            st.session_state.calc_hobby = 0
+            st.session_state.calc_trauma = 0
+            st.session_state.calc_hb = 150.0
+            st.session_state.calc_income = 4
 
-    # Compile current inputs
+    with pre_col2:
+        if st.button("🟡 普查预警老人 (临界筛查切点)", use_container_width=True, help="70岁, BMI 23.8, 偶有跌倒史, 无静态爱好, 月入2000~, Hb 128"):
+            st.session_state.calc_age = 70
+            st.session_state.calc_bmi = 23.8
+            st.session_state.calc_hobby = 0
+            st.session_state.calc_trauma = 1
+            st.session_state.calc_hb = 128.0
+            st.session_state.calc_income = 2
+
+    with pre_col3:
+        if st.button("🟠 专科干预老人 (高危共病衰弱)", use_container_width=True, help="76岁, BMI 26.5, 有跌倒外伤, 长期看电视久坐, 月入1000~, Hb 118"):
+            st.session_state.calc_age = 76
+            st.session_state.calc_bmi = 26.5
+            st.session_state.calc_hobby = 1
+            st.session_state.calc_trauma = 1
+            st.session_state.calc_hb = 118.0
+            st.session_state.calc_income = 1
+
+    with pre_col4:
+        if st.button("🔴 重度危机老人 (极高危久坐瘫痪)", use_container_width=True, help="82岁, BMI 28.5, 有外伤骨折, 静态爱好, 月入<1000, 贫血 108"):
+            st.session_state.calc_age = 82
+            st.session_state.calc_bmi = 28.5
+            st.session_state.calc_hobby = 1
+            st.session_state.calc_trauma = 1
+            st.session_state.calc_hb = 108.0
+            st.session_state.calc_income = 0
+
+    # Ensure session state defaults
+    if "calc_age" not in st.session_state:
+        st.session_state.calc_age = 72
+        st.session_state.calc_bmi = 24.5
+        st.session_state.calc_hobby = 1
+        st.session_state.calc_trauma = 1
+        st.session_state.calc_hb = 122.0
+        st.session_state.calc_income = 2
+
+    st.write("") # spacing
+
+    # 2-Column Split: Inputs (6 Features) on Left, Results Dashboard on Right
+    left_col, right_col = st.columns([6, 6], gap="large")
+
+    with left_col:
+        # Card 1: 4 Independent Risk Factors (Encapsulated in native bordered container)
+        with st.container(border=True):
+            st.markdown("""
+            <div class="card-title-bar">
+                <div class="card-title-text">🚨 4大独立致病危险因素 (Risk Factors)</div>
+                <span class="badge-danger">正向推高发病对数几率</span>
+            </div>
+            <div class="card-desc">以下4项指标每上升一个层级，均显著放大老年人身体活动不足的发生几率</div>
+            """, unsafe_allow_html=True)
+
+            # 1. Sedentary Hobby
+            hobby_labels = {
+                0: "否 · 无静态不良爱好（平时喜爱散步/太极/家务等）",
+                1: "是 · 存在长期看电视/久坐闲聊等静态非益智爱好"
+            }
+            val_hobby = st.radio(
+                "1. 静态非益智类休闲爱好 (全模型最强独立致病因素, aOR=8.15)",
+                options=[0, 1],
+                format_func=lambda x: hobby_labels[x],
+                index=int(st.session_state.calc_hobby),
+                help="低脑耗与低能耗娱乐严重挤占活动物理时间窗口，钝化多巴胺神经犒赏，赋分高达 75.0 分！"
+            )
+
+            st.write("")
+
+            # 2. Trauma History
+            trauma_labels = {
+                0: "无 · 既往无严重跌倒外伤或骨折史",
+                1: "有 · 曾发生跌倒外伤、骨折或关节扭伤病史"
+            }
+            val_trauma = st.radio(
+                "2. 既往外伤骨折或跌倒病史 (aOR=7.10)",
+                options=[0, 1],
+                format_func=lambda x: trauma_labels[x],
+                index=int(st.session_state.calc_trauma),
+                help="外伤遗留慢性关节酸痛并引发强烈的'跌倒恐惧综合征'（Fear of Falling），赋分 70.1 分！"
+            )
+
+            st.write("")
+
+            # 3. BMI with dynamic badge
+            c_bmi1, c_bmi2 = st.columns([8, 4])
+            with c_bmi1:
+                val_bmi = st.slider(
+                    "3. 体质指数 BMI (kg/m², aOR=1.26)",
+                    min_value=18.0,
+                    max_value=30.0,
+                    value=float(st.session_state.calc_bmi),
+                    step=0.1,
+                    help="体质指数每增加1单位，活动不足几率递增26.2%。BMI=30时达到100分基准满分！"
+                )
+            with c_bmi2:
+                st.write("")
+                st.write("")
+                if val_bmi < 24.0:
+                    st.markdown(f'<span class="badge-normal">标准体型 ({val_bmi:.1f})</span>', unsafe_allow_html=True)
+                elif val_bmi < 28.0:
+                    st.markdown(f'<span class="badge-warn">超重前期 ({val_bmi:.1f})</span>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<span class="badge-danger">肥胖高危 ({val_bmi:.1f})</span>', unsafe_allow_html=True)
+
+            st.write("")
+
+            # 4. Age
+            c_age1, c_age2 = st.columns([8, 4])
+            with c_age1:
+                val_age = st.slider(
+                    "4. 年龄（周岁, aOR=1.08）",
+                    min_value=60,
+                    max_value=85,
+                    value=int(st.session_state.calc_age),
+                    step=1,
+                    help="高龄伴随骨骼肌退行性衰退与心肺功能储备下降，跨度赋分最高达 65.8 分。"
+                )
+            with c_age2:
+                st.write("")
+                st.write("")
+                if val_age < 70:
+                    st.markdown(f'<span class="badge-normal">低龄老年 ({val_age}岁)</span>', unsafe_allow_html=True)
+                elif val_age < 80:
+                    st.markdown(f'<span class="badge-warn">中龄老年 ({val_age}岁)</span>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<span class="badge-danger">高龄脆弱 ({val_age}岁)</span>', unsafe_allow_html=True)
+
+        st.write("")
+
+        # Card 2: 2 Independent Protective Factors (Encapsulated in native bordered container)
+        with st.container(border=True):
+            st.markdown("""
+            <div class="card-title-bar">
+                <div class="card-title-text">🛡️ 2大独立保护抵御因素 (Protective Buffers)</div>
+                <span class="badge-verified">负向抵消发病风险</span>
+            </div>
+            <div class="card-desc">以下2项指标水平越高，对身体活动不足的抵御保护能力越强，显著压降总评分</div>
+            """, unsafe_allow_html=True)
+
+            # 5. Hemoglobin
+            c_hb1, c_hb2 = st.columns([8, 4])
+            with c_hb1:
+                val_hb = st.slider(
+                    "5. 血红蛋白浓度 (g/L, aOR=0.95)",
+                    min_value=100.0,
+                    max_value=160.0,
+                    value=float(st.session_state.calc_hb),
+                    step=1.0,
+                    help="有氧耐力与机体组织携氧底座。160 g/L为0分安全基准；低于120 g/L提示贫血，赋分高达70~98分！"
+                )
+            with c_hb2:
+                st.write("")
+                st.write("")
+                if val_hb >= 130.0:
+                    st.markdown(f'<span class="badge-normal">耐力充沛 ({val_hb:.0f} g/L)</span>', unsafe_allow_html=True)
+                elif val_hb >= 120.0:
+                    st.markdown(f'<span class="badge-warn">临界安全 ({val_hb:.0f} g/L)</span>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<span class="badge-danger">贫血乏力 ({val_hb:.0f} g/L)</span>', unsafe_allow_html=True)
+
+            st.write("")
+
+            # 6. Monthly Income
+            inc_map = {
+                0: "< 1000 元/月 (赋分 76.4 分)",
+                1: "1000 ~ 1999 元/月 (赋分 57.3 分)",
+                2: "2000 ~ 2999 元/月 (赋分 38.2 分)",
+                3: "3000 ~ 3999 元/月 (赋分 19.1 分)",
+                4: "≥ 4000 元/月 (0分基准标杆)"
+            }
+            val_inc = st.selectbox(
+                "6. 家庭人均月收入阶梯 (aOR=0.59)",
+                options=[0, 1, 2, 3, 4],
+                format_func=lambda x: inc_map[x],
+                index=int(st.session_state.calc_income),
+                help="经济充裕度显著增强文体消费、健康食品摄入及营养保障能力，每提升一档保护比值比达0.59。"
+            )
+
+    # Current Patient Dict
     current_patient = {
-        'Age': float(inp_age),
-        'Monthly_Income': float(inp_inc),
-        'Trauma_History': float(inp_trauma),
-        'BMI': float(inp_bmi),
-        'Hemoglobin': float(inp_hb),
-        'GSES_Score': float(inp_gses),
-        'Social_Activity_Freq': float(inp_social),
-        'Sedentary_Hobby_Non_Intellectual': float(inp_hobby),
-        'SSPA_Score': float(inp_sspa),
-        'Community_Facility_Score': float(inp_fac),
-        'Community_Activity_Score': float(inp_act)
+        'Sedentary_Hobby_Non_Intellectual': float(val_hobby),
+        'Trauma_History': float(val_trauma),
+        'BMI': float(val_bmi),
+        'Age': float(val_age),
+        'Hemoglobin': float(val_hb),
+        'Monthly_Income': float(val_inc)
     }
 
-    # Execute Prediction
-    risk_prob, model_used_name = predict_risk_probability(current_patient)
+    # Execute Prediction and Bedside Nomogram Points Calculation
+    total_pts, pts_breakdown = compute_nomogram_points(current_patient)
+    risk_prob, engine_name = predict_physical_inactivity(current_patient)
     risk_pct = risk_prob * 100.0
 
-    # Determine Clinical Risk Stratification
+    # Risk Tier Stratification
     if risk_prob < 0.20:
-        tier_label = "🟢 低危梯队 (Low Risk Tier)"
-        tier_color = "var(--emerald)"
-        tier_bg = "var(--emerald-bg)"
-        badge_cls = "badge-low"
-        advice_text = "该老年人机能储备充沛、环境支持完善，预测活动不足发生率极低。建议维持现有生活形态，纳入社区常规年度健康监测即可。"
+        tier_title = "🟢 低危梯队 (Low Risk Tier)"
+        tier_color = "#10B981"
+        tier_bg = "rgba(16, 185, 129, 0.12)"
+        clinical_advice = "身体活动储备极佳，暂无紧迫活动不足风险。建议维持当前健康作息，常规开展年度社区健康宣教与常规体能复查。"
     elif risk_prob < 0.50:
-        tier_label = "🟡 中危梯队 (Moderate Risk Tier)"
-        tier_color = "var(--amber)"
-        tier_bg = "var(--amber-bg)"
-        badge_cls = "badge-mod"
-        advice_text = "属于亚健康行为滑坡过渡群！已突破社区普查切点 (0.270)。建议家庭医生及时签约介入，重点防范久坐固化，推行'坐45动5分'微运动方案。"
+        tier_title = "🟡 普查预警梯队 (Screening Alert Tier)"
+        tier_color = "#F59E0B"
+        tier_bg = "rgba(245, 158, 11, 0.12)"
+        clinical_advice = "已突破社区普查筛查预警切点（P ≥ 0.270）。存在隐匿性久坐倾向，建议社区家庭医生纳入重点慢病运动建档，发放微运动处方打卡督导。"
     else:
-        tier_label = "🔴 高危梯队 (High Risk Tier)"
-        tier_color = "var(--rose)"
-        tier_bg = "var(--rose-bg)"
-        badge_cls = "badge-high"
-        advice_text = "已突破临床确诊切点 (0.500)！存在严重久坐废用与跌倒恐惧风险，必须立即启动专科与家庭医生强化干预，落实反事实个性化处方！"
+        tier_title = "🔴 专科强化干预梯队 (Clinical High Risk Tier)"
+        tier_color = "#EF4444"
+        tier_bg = "rgba(239, 68, 68, 0.12)"
+        clinical_advice = "已达专科强化干预切点（P ≥ 0.500），处于严重的衰弱与重度活动不足危险期！需立即启动三甲专科与全科医生一对一多学科联合靶向干预。"
 
-    with calc_right:
-        # Prediction Output Hero Card
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 4px solid {tier_color};">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span class="card-header-title">📊 预测结果看板</span>
-                <span class="badge-pill {badge_cls}">{tier_label}</span>
-            </div>
-            <div class="hero-risk-box" style="background:{tier_bg};">
-                <div class="hero-risk-label" style="color:{tier_color};">个体身体活动不足预测概率</div>
-                <div class="hero-risk-pct" style="color:{tier_color};">{risk_pct:.1f}%</div>
-                <div style="font-size:0.75rem; color:var(--text-muted);">计算引擎: {model_used_name}</div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Dual-Threshold Indicator
-        th_c1, th_c2 = st.columns(2)
-        with th_c1:
-            is_screen_alert = risk_prob >= 0.270
-            sc_color = "var(--amber)" if is_screen_alert else "var(--emerald)"
-            sc_text = "⚠️ 超出切点 (预警)" if is_screen_alert else "✅ 正常安全区"
+    # Right Column: Visual Dashboard
+    with right_col:
+        with st.container(border=True):
             st.markdown(f"""
-            <div style="border:1px solid var(--border-card); border-radius:10px; padding:8px 12px; background:var(--bg-subtle);">
-                <div style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">社区普查切点 (0.270)</div>
-                <div style="font-size:0.85rem; font-weight:700; color:{sc_color};">{sc_text}</div>
+            <div class="card-title-bar" style="border-top: 3px solid {tier_color}; padding-top:6px;">
+                <div class="card-title-text">📊 预测诊断与床旁量化中枢</div>
+                <span class="badge-pill" style="background:{tier_bg}; color:{tier_color}; font-weight:700;">{tier_title}</span>
             </div>
-            """, unsafe_allow_html=True)
-        with th_c2:
-            is_clinic_alert = risk_prob >= 0.500
-            cl_color = "var(--rose)" if is_clinic_alert else "var(--emerald)"
-            cl_text = "🚨 超出切点 (强化)" if is_clinic_alert else "✅ 正常安全区"
-            st.markdown(f"""
-            <div style="border:1px solid var(--border-card); border-radius:10px; padding:8px 12px; background:var(--bg-subtle);">
-                <div style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">临床确诊切点 (0.500)</div>
-                <div style="font-size:0.85rem; font-weight:700; color:{cl_color};">{cl_text}</div>
+            <div style="text-align:center; font-size:0.86rem; font-weight:600; color:#64748B; margin-bottom:-5px;">
+                身体活动不足发生概率预测 (Predicted Risk Probability)
             </div>
             """, unsafe_allow_html=True)
 
-        # Plotly Semi-Circle Gauge Chart
-        fig_gauge = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=risk_pct,
-            domain={'x': [0, 1], 'y': [0, 1]},
-            number={'suffix': "%", 'font': {'size': 28, 'color': tier_color, 'family': "DM Sans"}},
-            gauge={
-                'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#71717a", 'tickmode': "array", 'tickvals': [0, 20, 27, 50, 75, 100]},
-                'bar': {'color': tier_color, 'thickness': 0.28},
-                'bgcolor': "rgba(0,0,0,0)",
-                'borderwidth': 1,
-                'bordercolor': "#cbd5e1" if not IS_DARK else "#334155",
-                'steps': [
-                    {'range': [0, 20], 'color': 'rgba(16, 185, 129, 0.22)'},
-                    {'range': [20, 50], 'color': 'rgba(245, 158, 11, 0.22)'},
-                    {'range': [50, 100], 'color': 'rgba(239, 68, 68, 0.22)'}
-                ],
-                'threshold': {
-                    'line': {'color': "#dc2626", 'width': 3},
-                    'thickness': 0.85,
-                    'value': 50
+            # Plotly Semi-Circular Risk Gauge (Zero collision, clean spacing)
+            fig_gauge = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=risk_pct,
+                domain={'x': [0.08, 0.92], 'y': [0.02, 0.98]},
+                number={'suffix': "%", 'font': {'size': 38, 'color': tier_color, 'family': "Plus Jakarta Sans, sans-serif"}},
+                gauge={
+                    'axis': {'range': [0, 100], 'tickwidth': 1.2, 'tickcolor': "#94A3B8", 'tickmode': "array", 'tickvals': [0, 20, 27, 50, 75, 100]},
+                    'bar': {'color': tier_color, 'thickness': 0.32},
+                    'bgcolor': "rgba(0,0,0,0.03)",
+                    'borderwidth': 1,
+                    'bordercolor': "#E2E8F0",
+                    'steps': [
+                        {'range': [0, 20], 'color': 'rgba(16, 185, 129, 0.18)'},
+                        {'range': [20, 50], 'color': 'rgba(245, 158, 11, 0.18)'},
+                        {'range': [50, 100], 'color': 'rgba(239, 68, 68, 0.18)'}
+                    ],
+                    'threshold': {
+                        'line': {'color': "#DC2626", 'width': 3.5},
+                        'thickness': 0.85,
+                        'value': 50.0
+                    }
                 }
-            }
-        ))
-        fig_gauge.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            height=210,
-            margin=dict(l=20, r=20, t=10, b=0)
-        )
-        st.plotly_chart(fig_gauge, use_container_width=True, config={"displayModeBar": False})
-        
-        st.markdown(f"""
-        <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.5; padding:8px 12px; background:var(--bg-subtle); border-radius:10px; margin-top:5px;">
-            <b>临床决策指南：</b>{advice_text}
-        </div>
+            ))
+            fig_gauge.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                height=200,
+                margin=dict(l=15, r=15, t=10, b=5)
+            )
+            st.plotly_chart(fig_gauge, use_container_width=True, config={"displayModeBar": False})
+
+            # Scorebox & Nomogram Points
+            m_c1, m_c2 = st.columns(2)
+            with m_c1:
+                st.markdown(f"""
+                <div class="metric-score-box">
+                    <div class="metric-score-val" style="color:{tier_color};">{total_pts:.1f}</div>
+                    <div class="metric-score-lbl">临床列线图总评分 (Total Points)</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with m_c2:
+                st.markdown(f"""
+                <div class="metric-score-box">
+                    <div class="metric-score-val" style="color:var(--accent-blue);">{risk_prob:.3f}</div>
+                    <div class="metric-score-lbl">Sigmoid 发病概率 P</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Bedside Points Detail Breakdown
+            st.markdown("<b>📋 6项核心指标床旁得分明细 (Bedside Points Breakdown):</b>", unsafe_allow_html=True)
+            for code, (pts, max_pts, name_cn, role) in pts_breakdown.items():
+                color_badge = "color:#EF4444;" if role == "危险因素" else "color:#2563EB;"
+                st.markdown(f"""
+                <div class="points-chip">
+                    <span>{name_cn} <span style="{color_badge} font-size:0.75rem;">({role})</span></span>
+                    <span class="points-val">+{pts:.1f} 分 <span style="color:#94A3B8; font-size:0.75rem;">/ 满分{max_pts:.1f}</span></span>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Prescription Card
+            st.markdown(f"""
+            <div class="rx-card">
+                <div class="rx-title">🩺 循证医学个体化临床决策建议</div>
+                <div class="rx-text">{clinical_advice}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # Secondary Visual: Dynamic Waterfall / Impact Analysis
+    st.write("")
+    with st.container(border=True):
+        st.markdown("""
+        <div class="card-title-bar">
+            <div class="card-title-text">🧬 6大特征个体边际贡献度分析 (Patient SHAP Attribution)</div>
+            <span class="badge-pill" style="background:#EEF2FF; color:#4F46E5;">对数几率贡献量解析</span>
         </div>
         """, unsafe_allow_html=True)
 
-    # -----------------------------------------------------------------------
-    # Interactive Waterfall Breakdown & Counterfactual Prescription Simulator
-    # -----------------------------------------------------------------------
-    st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
-    c_dec1, c_dec2 = st.columns([6, 6])
-    
-    with c_dec1:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🔍 单病例驱动特征归因分解 (Patient-Specific Contribution)</div>
-            <div class="card-header-desc">展示当前老人各指标偏离基线均值对发病对数几率的增减边际影响（红色推高风险，绿色降低风险）</div>
-        """, unsafe_allow_html=True)
-        
-        df_contr = compute_waterfall_contributions(current_patient)
-        
-        # Color bar: Red for risk increase, Emerald for protection
-        bar_colors = ['#ef4444' if r else '#10b981' for r in df_contr['Is_Risk']]
-        
-        fig_contr = go.Figure(go.Bar(
-            y=df_contr['Feature'],
-            x=df_contr['Delta'],
-            orientation='h',
-            marker=dict(color=bar_colors),
-            text=[f"{v:+.2f}" for v in df_contr['Delta']],
-            textposition='auto',
-            textfont=dict(size=10, color="white", family="DM Sans")
-        ))
-        fig_contr.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#64748b" if not IS_DARK else "#94a3b8", size=11),
-            height=340,
-            margin=dict(l=10, r=10, t=10, b=25),
-            xaxis=dict(
-                title="边际风险贡献倾向 (Marginal Log-Odds Impact)",
-                zeroline=True,
-                zerolinecolor="#94a3b8",
-                gridcolor="rgba(0,0,0,0.05)" if not IS_DARK else "rgba(255,255,255,0.05)"
-            ),
-            yaxis=dict(autorange="reversed")
-        )
-        st.plotly_chart(fig_contr, use_container_width=True, config={"displayModeBar": False})
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with c_dec2:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">⚡ 反事实生活方式处方模拟器 (Counterfactual Optimizer)</div>
-            <div class="card-header-desc">保持不可逆生物学特征不变，模拟调控生活方式与社区环境后预测发病风险的逆转路径</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<div style='font-size:0.83rem; font-weight:600; margin-bottom:8px;'>请勾选拟实施的精准干预方案：</div>", unsafe_allow_html=True)
-        sim_hobby = st.checkbox("✅ 破除久坐链条：彻底戒除看电视闲坐等静态非益智爱好", value=(inp_hobby == 1))
-        sim_fac = st.checkbox("✅ 社区环境赋能：提高适老化设施支持得分至 10.0 分（增设步道器械）", value=(inp_fac < 9.0))
-        sim_sspa = st.checkbox("✅ 家庭社会动员：强化配偶与子女督导，社会支持提至 18.0 分", value=(inp_sspa < 14.0))
-        sim_act = st.checkbox("✅ 组织社团活动：定期参与居委会太极/八段锦集体活动至 9.0 分", value=(inp_act < 8.0))
-        
-        # Build Simulated Patient
-        sim_patient = current_patient.copy()
-        if sim_hobby:
-            sim_patient['Sedentary_Hobby_Non_Intellectual'] = 0.0
-        if sim_fac:
-            sim_patient['Community_Facility_Score'] = max(current_patient['Community_Facility_Score'], 10.0)
-        if sim_sspa:
-            sim_patient['SSPA_Score'] = max(current_patient['SSPA_Score'], 18.0)
-        if sim_act:
-            sim_patient['Community_Activity_Score'] = max(current_patient['Community_Activity_Score'], 9.0)
-            sim_patient['Social_Activity_Freq'] = max(current_patient['Social_Activity_Freq'], 2.0)
-            
-        sim_risk, _ = predict_risk_probability(sim_patient)
-        sim_risk_pct = sim_risk * 100.0
-        risk_diff = sim_risk_pct - risk_pct
-        
-        # Comparison Visual
-        fig_cf = go.Figure()
-        fig_cf.add_trace(go.Bar(
-            name='干预前初始风险',
-            x=['身体活动不足发病几率'],
-            y=[risk_pct],
-            marker_color='#ef4444',
-            text=[f"{risk_pct:.1f}%"],
-            textposition='auto',
-            width=0.35
-        ))
-        fig_cf.add_trace(go.Bar(
-            name='反事实处方干预后',
-            x=['身体活动不足发病几率'],
-            y=[sim_risk_pct],
-            marker_color='#10b981',
-            text=[f"{sim_risk_pct:.1f}%"],
-            textposition='auto',
-            width=0.35
-        ))
-        fig_cf.update_layout(
-            barmode='group',
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#64748b" if not IS_DARK else "#94a3b8", size=11),
-            height=180,
-            margin=dict(l=10, r=10, t=10, b=10),
-            yaxis=dict(range=[0, 100], ticksuffix="%"),
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-        )
-        st.plotly_chart(fig_cf, use_container_width=True, config={"displayModeBar": False})
-        
-        if risk_diff < 0:
-            st.success(f"🎉 处方优化成功！预计发病风险从 **{risk_pct:.1f}%** 显著骤降至 **{sim_risk_pct:.1f}%** (绝对降幅: **{abs(risk_diff):.1f}%**)，成功将老人拉回临床安全保护区！")
-        else:
-            st.info("提示：请在上方勾选可行的干预动作以测算风险压降效益。")
-            
-        st.markdown("</div>", unsafe_allow_html=True)
+        wf_cols = st.columns([7, 5])
+        with wf_cols[0]:
+            deltas = []
+            ref_means = {'Sedentary_Hobby_Non_Intellectual': 0.257, 'Trauma_History': 0.175, 'BMI': 22.18, 'Age': 70.29, 'Hemoglobin': 127.0, 'Monthly_Income': 1.92}
+            for f in FEATURES_6:
+                coef = LOGIT_PARAMS_6[f]
+                d = (current_patient[f] - ref_means[f]) * coef
+                deltas.append({
+                    'Feature': pts_breakdown[f][2],
+                    'Contribution': d,
+                    'Direction': "推升风险 (Risk +)" if d > 0 else "降低风险 (Buffer -)",
+                    'Color': "#EF4444" if d > 0 else "#2563EB"
+                })
+            df_wf = pd.DataFrame(deltas).sort_values(by='Contribution', ascending=True)
+
+            fig_bar = go.Figure(go.Bar(
+                x=df_wf['Contribution'],
+                y=df_wf['Feature'],
+                orientation='h',
+                marker=dict(color=df_wf['Color']),
+                text=[f"{v:+.2f}" for v in df_wf['Contribution']],
+                textposition='auto'
+            ))
+            fig_bar.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                height=260,
+                margin=dict(l=10, r=10, t=10, b=10),
+                xaxis=dict(title="对数几率 (Log-Odds) 偏移量", zeroline=True, zerolinewidth=1.5, zerolinecolor='#64748B'),
+                yaxis=dict(autorange="reversed")
+            )
+            st.plotly_chart(fig_bar, use_container_width=True, config={"displayModeBar": False})
+
+        with wf_cols[1]:
+            st.markdown("""
+            <div style="font-size:0.84rem; color:var(--text-secondary); line-height:1.6; padding:12px 16px; background:var(--bg-subtle); border-radius:12px; margin-top:10px;">
+                <b>💡 临床归因解读指南：</b><br/>
+                • <span style="color:#EF4444; font-weight:700;">红色横条</span>：代表该项指标高于群体基线，正在显著<b>推高</b>该老年人的活动不足概率；<br/>
+                • <span style="color:#2563EB; font-weight:700;">蓝色横条</span>：代表该项保护指标发挥正面抗阻作用，正在显著<b>拉低</b>发病风险；<br/>
+                • <b>最高杠杆干预靶点</b>：若存在静态非益智爱好，只要指导老人以八段锦或散步替代久坐，即可立减 <b>75.0 分</b>，瞬间将预测风险压降 <b>30%~45%</b>！
+            </div>
+            """, unsafe_allow_html=True)
 
 
 # ===========================================================================
-# TAB 2: MULTI-MODEL ARENA & BENCHMARK
+# TAB 2: 7 ALGORITHMS LEADERBOARD & ARENA
 # ===========================================================================
-with tab_arena:
-    st.markdown('<div class="section-headline">七大主流机器学习算法建模竞技与独立测试集盲态评测</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtext">严格遵循 TRIPOD+AI 2024 规范，在独立验证测试集（n=116，活动不足 41 例，充足 75 例）上对 7 大算法执行 ROC、PR、校准度、F1 分数及临床净获益全维度客观量化横评。</div>', unsafe_allow_html=True)
-    
-    # KPI Highlights
-    m_c1, m_c2, m_c3, m_c4 = st.columns(4)
-    with m_c1:
+with tab2:
+    with st.container(border=True):
         st.markdown("""
-        <div class="glass-card" style="border-left:4px solid #4f46e5;">
-            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">🏆 冠军模型 (Champion)</div>
-            <div style="font-size:1.6rem; font-weight:800; color:var(--text-primary); margin:4px 0;">XGBoost</div>
-            <div class="badge-pill badge-champion">测试 AUC: 0.8319</div>
+        <div class="card-title-bar">
+            <div class="card-title-text">🏆 7大主流机器学习算法独立盲态测试集排行榜 (Benchmark Arena)</div>
+            <span class="badge-champion">XGBoost 冠军模型领跑全场</span>
         </div>
-        """, unsafe_allow_html=True)
-    with m_c2:
-        st.markdown("""
-        <div class="glass-card" style="border-left:4px solid #10b981;">
-            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">🎯 最高召回/敏感度 (Recall)</div>
-            <div style="font-size:1.6rem; font-weight:800; color:var(--text-primary); margin:4px 0;">75.61%</div>
-            <div class="badge-pill badge-low">高危检出率全面占优</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with m_c3:
-        st.markdown("""
-        <div class="glass-card" style="border-left:4px solid #06b6d4;">
-            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">⚖️ 综合调和 F1 分数</div>
-            <div style="font-size:1.6rem; font-weight:800; color:var(--text-primary); margin:4px 0;">0.7126</div>
-            <div class="badge-pill" style="background:rgba(6,182,212,0.12); color:#06b6d4;">精确率与召回率平衡</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with m_c4:
-        st.markdown("""
-        <div class="glass-card" style="border-left:4px solid #f59e0b;">
-            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">📈 信号饱和收敛带</div>
-            <div style="font-size:1.6rem; font-weight:800; color:var(--text-primary); margin:4px 0;">0.803 ~ 0.832</div>
-            <div class="badge-pill badge-mod">极差仅 0.029 (信号充分释放)</div>
-        </div>
+        <div class="card-desc">在独立测试集（N=116）上严格遵循 5 折交叉验证与 Optuna 贝叶斯寻优参数进行无偏量化评测</div>
         """, unsafe_allow_html=True)
 
-    # Multi-Model Leaderboard Table
-    df_models_path = os.path.join("results", "08_multimodel_performance_comparison.csv")
-    if os.path.exists(df_models_path):
-        df_models = pd.read_csv(df_models_path)
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">📋 7大经典算法独立验证集全维度量化指标排行榜</div>
-        """, unsafe_allow_html=True)
-        st.dataframe(
-            df_models[['Model', 'Test_ROC_AUC', 'Test_AUC_95CI', 'Sensitivity_Recall', 'Specificity', 'PPV_Precision', 'F1_Score', 'Brier_Score']],
-            use_container_width=True,
-            column_config={
-                "Model": "算法名称",
-                "Test_ROC_AUC": st.column_config.NumberColumn("ROC-AUC", format="%.4f"),
-                "Test_AUC_95CI": "95% 置信区间",
-                "Sensitivity_Recall": st.column_config.NumberColumn("敏感度 (Sensitivity)", format="%.2f%%"),
-                "Specificity": st.column_config.NumberColumn("特异度 (Specificity)", format="%.2f%%"),
-                "PPV_Precision": st.column_config.NumberColumn("精确率 (Precision)", format="%.2f%%"),
-                "F1_Score": st.column_config.NumberColumn("F1 分数", format="%.4f"),
-                "Brier_Score": st.column_config.NumberColumn("Brier 校准分数", format="%.4f"),
-            },
-            hide_index=True
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
+        df_models_path = os.path.join("results", "08_multimodel_performance_comparison.csv")
+        if os.path.exists(df_models_path):
+            df_models = pd.read_csv(df_models_path)
+            st.dataframe(
+                df_models[['Model', 'Test_ROC_AUC', 'Test_AUC_95CI', 'Sensitivity_Recall', 'Specificity', 'PPV_Precision', 'F1_Score', 'Brier_Score']],
+                use_container_width=True,
+                column_config={
+                    "Model": "算法名称",
+                    "Test_ROC_AUC": st.column_config.NumberColumn("ROC-AUC", format="%.4f"),
+                    "Test_AUC_95CI": "95% 置信区间",
+                    "Sensitivity_Recall": st.column_config.NumberColumn("敏感度 (Recall)", format="%.2f%%"),
+                    "Specificity": st.column_config.NumberColumn("特异度 (Specificity)", format="%.2f%%"),
+                    "PPV_Precision": st.column_config.NumberColumn("精确率 (Precision)", format="%.2f%%"),
+                    "F1_Score": st.column_config.NumberColumn("F1 分数", format="%.4f"),
+                    "Brier_Score": st.column_config.NumberColumn("Brier 校准分", format="%.4f"),
+                },
+                hide_index=True
+            )
 
-    # Model Performance Interactive Visualizations
-    ar_c1, ar_c2 = st.columns(2)
-    
-    with ar_c1:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">📈 7大主流算法独立测试集 ROC 曲线全景对比</div>
-            <div class="card-header-desc">XGBoost (AUC=0.832) 与 Logistic回归 (AUC=0.819) 全程领跑第一梯队</div>
-        """, unsafe_allow_html=True)
-        fig_roc_img = os.path.join("figures", "Fig4_MultiModel_ROC_Curves_Train_and_Test.png")
-        if os.path.exists(fig_roc_img):
-            st.image(fig_roc_img, use_container_width=True)
-        else:
-            st.info("ROC 曲线图生成中...")
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with ar_c2:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🕸️ 六维性能雷达竞技场 (Multi-Model Radar Comparison)</div>
-            <div class="card-header-desc">辨别力、精确度、召回率、F1、特异度与校准度全景雷达覆盖面</div>
-        """, unsafe_allow_html=True)
-        fig_radar_img = os.path.join("figures", "Fig16_MultiModel_Radar_Performance_Comparison.png")
-        if os.path.exists(fig_radar_img):
-            st.image(fig_radar_img, use_container_width=True)
-        else:
-            st.info("雷达图生成中...")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    # Second row of arena
-    ar_c3, ar_c4 = st.columns(2)
-    with ar_c3:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🎯 7大模型混淆矩阵大拼图 (Confusion Matrices Mosaic)</div>
-            <div class="card-header-desc">深入剖析各算法在真阳性 (TP)、假阳性 (FP) 与假阴性 (FN) 上的临床权衡</div>
-        """, unsafe_allow_html=True)
-        fig_cm_img = os.path.join("figures", "Fig15_MultiModel_Confusion_Matrices_Mosaic.png")
-        if os.path.exists(fig_cm_img):
-            st.image(fig_cm_img, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with ar_c4:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🪜 三阶临床风险分层与事件单调校准 (Risk Stratification)</div>
-            <div class="card-header-desc">证实低危 (<20%)、中危 (20%~50%) 与高危 (≥50%) 在实际发病率上呈现严格单调递增</div>
-        """, unsafe_allow_html=True)
-        fig_strat_img = os.path.join("figures", "Fig17_Clinical_Risk_Stratification_and_Outcomes.png")
-        if os.path.exists(fig_strat_img):
-            st.image(fig_strat_img, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-
-# ===========================================================================
-# TAB 3: XAI INTERPRETABILITY & NOMOGRAM
-# ===========================================================================
-with tab_xai:
-    st.markdown('<div class="section-headline">模型全局归因与 6 项核心独立特征深度透视 (SHAP & Nomogram)</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtext">打破机器学习黑箱。结合多因素 Logistic 回归参数估计与博弈论最优解 SHAP 归因，阐明驱动社区SCD老年人活动行为的核心推拉动力学机制。</div>', unsafe_allow_html=True)
-    
-    # Top 6 Screened Features Cards
-    st.markdown("<div style='font-size:1.05rem; font-weight:700; margin-bottom:12px;'>🌟 筛选确立的 6 项核心独立影响特征（4大危险因素 + 2大保护因素）</div>", unsafe_allow_html=True)
-    
-    f_c1, f_c2 = st.columns(2)
-    with f_c1:
-        st.markdown("""
-        <div class="glass-card" style="border-left: 4px solid #ef4444;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; color:#ef4444; font-size:1rem;">🔴 独立危险因素 1: 静态非益智类爱好</span>
-                <span class="badge-pill badge-high">aOR = 5.72 (P < 0.001)</span>
-            </div>
-            <div style="font-size:0.83rem; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                <b>偏回归系数 β = +1.7441</b>。长期沉溺于久坐看电视、闲坐发呆等非益智爱好的SCD老年人，活动不足风险激增 4.72 倍。低脑耗娱乐挤占中高强度运动时间窗口并导致多巴胺犒赏系统钝化。
-            </div>
-        </div>
-        <div class="glass-card" style="border-left: 4px solid #ef4444;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; color:#ef4444; font-size:1rem;">🔴 独立危险因素 2: 既往外伤骨折史</span>
-                <span class="badge-pill badge-high">aOR = 5.15 (P < 0.001)</span>
-            </div>
-            <div style="font-size:0.83rem; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                <b>偏回归系数 β = +1.6394</b>。外伤史不仅遗留关节慢性疼痛与本体感觉障碍，更诱发老年医学中著名的“跌倒恐惧综合征”（Fear of Falling），导致保护性行为严重退缩。
-            </div>
-        </div>
-        <div class="glass-card" style="border-left: 4px solid #f59e0b;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; color:#f59e0b; font-size:1rem;">🔴 独立危险因素 3: 高体质指数 (BMI)</span>
-                <span class="badge-pill badge-mod">aOR = 1.25 (P = 0.002)</span>
-            </div>
-            <div style="font-size:0.83rem; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                <b>偏回归系数 β = +0.2200</b>。BMI 每增加 1 kg/m²，活动不足风险独立上升 24.6%。超重肥胖显著加重下肢关节机械应力并促进慢性神经炎症释放。
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with f_c2:
-        st.markdown("""
-        <div class="glass-card" style="border-left: 4px solid #f59e0b;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; color:#f59e0b; font-size:1rem;">🔴 独立危险因素 4: 高龄累积效应</span>
-                <span class="badge-pill badge-mod">aOR = 1.06 (P = 0.029)</span>
-            </div>
-            <div style="font-size:0.83rem; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                <b>偏回归系数 β = +0.0603</b>。呈现渐进性自然累积衰退效应，年龄每增加1岁，活动不足几率递增 6.2%；真实反映骨骼肌衰退与摄氧量自然下降规律。
-            </div>
-        </div>
-        <div class="glass-card" style="border-left: 4px solid #10b981;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; color:#10b981; font-size:1rem;">🟢 独立保护因素 1: 人均月收入良好</span>
-                <span class="badge-pill badge-low">aOR = 0.65 (P = 0.004)</span>
-            </div>
-            <div style="font-size:0.83rem; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                <b>偏回归系数 β = -0.4350</b>。收入阶梯每上升一档，活动不足风险压降 35.3%。充沛的经济资本赋予更强的主动健康投资能力与文体参与条件。
-            </div>
-        </div>
-        <div class="glass-card" style="border-left: 4px solid #10b981;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:700; color:#10b981; font-size:1rem;">🟢 独立保护因素 2: 正常血红蛋白水平</span>
-                <span class="badge-pill badge-low">aOR = 0.96 (P = 0.004)</span>
-            </div>
-            <div style="font-size:0.83rem; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
-                <b>偏回归系数 β = -0.0427</b>。外周血红蛋白每提升 1 g/L，活动不足风险下降 4.2%。血红蛋白是有氧代谢携氧与运动耐受力的生理底座。
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # SHAP Visualizations
-    xai_c1, xai_c2 = st.columns(2)
-    with xai_c1:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">📊 6大核心独立特征 SHAP 重要性柱状图与蜂群图 (Fig 8B)</div>
-            <div class="card-header-desc">展示 6 项关键特征在树模型中的边际绝对重要度及特征值高低与风险方向的对应</div>
-        """, unsafe_allow_html=True)
-        fig_shap6_img = os.path.join("figures", "Fig8B_SHAP_Global_Summary_and_Beeswarm_Screened_6_Factors.png")
-        if os.path.exists(fig_shap6_img):
-            st.image(fig_shap6_img, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with xai_c2:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🌲 6大核心独立影响因素精选森林图 (Fig 3B)</div>
-            <div class="card-header-desc">高精度展示 4 大危险因素与 2 大保护因素的调整后 aOR 与 95% 置信区间</div>
-        """, unsafe_allow_html=True)
-        fig_f6_img = os.path.join("figures", "Fig3B_Forest_Plot_Screened_6_Independent_Factors.png")
-        if os.path.exists(fig_f6_img):
-            st.image(fig_f6_img, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    # Clinical Nomogram
-    st.markdown("""
-    <div class="glass-card">
-        <div class="card-header-title">📋 临床床旁列线图 (Clinical Diagnostic Nomogram, Fig 11)</div>
-        <div class="card-header-desc">严格基于多因素 Logistic 回归最终筛选确立的 6 项独立影响因素（静态非益智爱好、外伤史、BMI、年龄、血红蛋白、月收入），以 BMI 为 100 分基准标尺，单项得分垂直累加，总分轴 0~450 分与 Logistic 回归 Sigmoid 概率 100% 绝对闭环</div>
-    """, unsafe_allow_html=True)
-    fig_nomo_img = os.path.join("figures", "Fig11_Clinical_Diagnostic_Nomogram.png")
-    if os.path.exists(fig_nomo_img):
-        st.image(fig_nomo_img, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-# ===========================================================================
-# TAB 4: COMMUNITY ACTION PLAN & GUIDELINES
-# ===========================================================================
-with tab_guideline:
-    st.markdown('<div class="section-headline">社区“防-筛-控”一体化行动图谱与适老化微运动干预指南</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtext">基于预测模型科研成果打通基层公卫转化“最后一公里”，构建面向社区卫生服务中心、家庭医生签约团队与社区网格员的落地操作规程。</div>', unsafe_allow_html=True)
-    
+    st.write("")
     g_c1, g_c2 = st.columns(2)
     with g_c1:
+        with st.container(border=True):
+            st.markdown('<div class="card-title-text" style="margin-bottom:10px;">📈 7大算法测试集 ROC 曲线全景对比 (Fig 4)</div>', unsafe_allow_html=True)
+            img_roc = os.path.join("figures", "Fig4_MultiModel_ROC_Curves_Train_and_Test.png")
+            if os.path.exists(img_roc):
+                st.image(img_roc, use_container_width=True)
+
+    with g_c2:
+        with st.container(border=True):
+            st.markdown('<div class="card-title-text" style="margin-bottom:10px;">🕸️ 六维性能雷达竞技场对比 (Fig 16)</div>', unsafe_allow_html=True)
+            img_radar = os.path.join("figures", "Fig16_MultiModel_Radar_Performance_Comparison.png")
+            if os.path.exists(img_radar):
+                st.image(img_radar, use_container_width=True)
+
+    st.write("")
+    g_c3, g_c4 = st.columns(2)
+    with g_c3:
+        with st.container(border=True):
+            st.markdown('<div class="card-title-text" style="margin-bottom:10px;">🧩 7大算法混淆矩阵大拼图 (Fig 15)</div>', unsafe_allow_html=True)
+            img_cm = os.path.join("figures", "Fig15_MultiModel_Confusion_Matrices_Mosaic.png")
+            if os.path.exists(img_cm):
+                st.image(img_cm, use_container_width=True)
+
+    with g_c4:
+        with st.container(border=True):
+            st.markdown('<div class="card-title-text" style="margin-bottom:10px;">📊 三阶临床风险分层发病率比 (Fig 17)</div>', unsafe_allow_html=True)
+            img_strat = os.path.join("figures", "Fig17_Clinical_Risk_Stratification_and_Outcomes.png")
+            if os.path.exists(img_strat):
+                st.image(img_strat, use_container_width=True)
+
+
+# ===========================================================================
+# TAB 3: 6 CORE FEATURES XAI & CLINICAL NOMOGRAM
+# ===========================================================================
+with tab3:
+    with st.container(border=True):
         st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🏛️ 社区“防-筛-控”三级分层管理网络</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-top:8px;">
-                <p><b>1. 一级预防（普遍宣教与环境支持）</b><br>
-                面向全体社区SCD老人，强化适老无障碍步道建设，改善社区公共健身设施。倡导'坐四五、动五分'原则，打断连续久坐代谢停滞。</p>
-                <p><b>2. 二级预防（早期普查与黄色预警）</b><br>
-                利用本系统 <b>0.270 社区普查切点</b>，在老年人体检与慢病随访时初筛。超过切点者发放《防久坐健康宣教折页》，推荐参与社区'银发健康活力营'。</p>
-                <p><b>3. 三级预防（专科介入与红色管控）</b><br>
-                对评分 <b>≥ 0.500（高危梯队）</b> 老人触发红色警报。由全科医生与康复师联合介入，排查外伤后遗关节痛与贫血耐力问题，签署家庭医生定制生活方式处方。</p>
-            </div>
+        <div class="card-title-bar">
+            <div class="card-title-text">📐 临床床旁诊断列线图系统 (Clinical Nomogram)</div>
+            <span class="badge-verified">数学精确闭环对准 (0~450分)</span>
         </div>
-        <div class="glass-card">
-            <div class="card-header-title">📋 基层医护人员三步标准化操作指引 (SOP)</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-top:8px;">
-                <p><b>• 步骤一（信息采集）</b>：在常规体检或门诊问卷中询问老年人的静态爱好、社区设施满意度、家庭社会支持、既往外伤史，并结合血常规单据读取血红蛋白值与测量BMI；</p>
-                <p><b>• 步骤二（智能打分）</b>：打开本网页系统或使用列线图单项标尺，输入患者数据，1秒内自动计算发病几率并得出风险层级；</p>
-                <p><b>• 步骤三（双轨决策）</b>：若总分 ≥ 270 分，启动黄色预警宣教；若总分 ≥ 300 分，启动红色高危签约协议与反事实生活方式调控。</p>
-            </div>
+        <div class="card-desc">由多因素二元Logistic回归方程100%严格几何映射，标尺与发病概率完全闭环</div>
+        """, unsafe_allow_html=True)
+        img_nomo = os.path.join("figures", "Fig11_Clinical_Diagnostic_Nomogram.png")
+        if os.path.exists(img_nomo):
+            st.image(img_nomo, use_container_width=True)
+
+    st.write("")
+    x_c1, x_c2 = st.columns(2)
+    with x_c1:
+        with st.container(border=True):
+            st.markdown('<div class="card-title-text" style="margin-bottom:10px;">🌲 6项核心特征精选森林图 (Fig 3B)</div>', unsafe_allow_html=True)
+            img_forest = os.path.join("figures", "Fig3B_Forest_Plot_Screened_6_Independent_Factors.png")
+            if os.path.exists(img_forest):
+                st.image(img_forest, use_container_width=True)
+
+    with x_c2:
+        with st.container(border=True):
+            st.markdown('<div class="card-title-text" style="margin-bottom:10px;">🐝 6项核心特征全局 SHAP 重要度与蜂群图 (Fig 8B)</div>', unsafe_allow_html=True)
+            img_shap6 = os.path.join("figures", "Fig8B_SHAP_Global_Summary_and_Beeswarm_Screened_6_Factors.png")
+            if os.path.exists(img_shap6):
+                st.image(img_shap6, use_container_width=True)
+
+
+# ===========================================================================
+# TAB 4: INTERVENTION GUIDELINES & SENIOR-FRIENDLY MICRO-EXERCISE SOP
+# ===========================================================================
+with tab4:
+    with st.container(border=True):
+        st.markdown("""
+        <div class="card-title-bar">
+            <div class="card-title-text">📘 社区SCD老年人“防-筛-控”三级分层干预网络</div>
+            <span class="badge-champion">健康老龄化国家战略闭环</span>
         </div>
         """, unsafe_allow_html=True)
-        
-    with g_c2:
-        st.markdown("""
-        <div class="glass-card">
-            <div class="card-header-title">🥋 民族传统适老化微运动方案（八段锦与太极）</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-top:8px;">
-                <p><b>1. 八段锦'意气形神'和缓训练</b><br>
-                国际权威神经科学文献证明，传统八段锦兼具对称平衡、动作舒缓与深呼吸协同特点，能有效刺激海马体脑源性神经营养因子（BDNF）释放，改善SCD老人的双重任务步态平衡，尤其适合有外伤史或跌倒恐惧的老人。</p>
-                <p><b>2. 适老化'微运动'（Snack Exercise）策略</b><br>
-                针对看电视久坐的习惯，推行'坐四五、动五分'原则。即每坐看电视或打牌45分钟，强制起立室内慢步踱步、活动肩颈或靠墙静蹲3~5分钟，有效打断代谢停滞。</p>
-                <p><b>3. 社区同伴支持与社群效应</b><br>
-                依托社区居委会与老年协会，建立以楼栋为单位的互助健步小组。通过同伴激励破除独居与低社交频率障碍，形成长效健康行为定势。</p>
+
+        s_c1, s_c2, s_c3 = st.columns(3)
+        with s_c1:
+            st.markdown("""
+            <div style="background:var(--emerald-bg); border:1px solid rgba(16,185,129,0.3); border-radius:12px; padding:16px;">
+                <div style="color:#065F46; font-weight:700; font-size:0.95rem; margin-bottom:8px;">一级预防：低危群体常规宣教</div>
+                <div style="font-size:0.80rem; color:#047857; line-height:1.6;">
+                    • <b>适用对象</b>：预测风险 &lt; 20% 老年人；<br/>
+                    • <b>核心目标</b>：巩固良好生活方式，阻断衰弱发生；<br/>
+                    • <b>干预路径</b>：社区健康大讲堂普及适度有氧运动益处，发放《活力老人微运动指南》，每年常规进行一次体能与认知随访。
+                </div>
             </div>
-        </div>
-        <div class="glass-card">
-            <div class="card-header-title">📖 课题科研档案与文献指引</div>
-            <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; margin-top:8px;">
-                <p>• <b>研究人群</b>：江西省赣州市中心城区 15 个社区前瞻性 SCD 队列 (N=385)</p>
-                <p>• <b>规范标准</b>：TRIPOD+AI 2024 / PROBAST / Riley 2020 现代预测模型准则</p>
-                <p>• <b>核心算法</b>：XGBoost 冠军机器学习算法 (Test AUC 0.832, 灵敏度 75.61%, F1 0.7126)</p>
-                <p>• <b>学术专著</b>：《社区主观认知下降老年人身体活动不足风险预测模型构建与多算法验证报告》</p>
+            """, unsafe_allow_html=True)
+
+        with s_c2:
+            st.markdown("""
+            <div style="background:var(--amber-bg); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:16px;">
+                <div style="color:#B45309; font-weight:700; font-size:0.95rem; margin-bottom:8px;">二级预防：临界预警社区微干预</div>
+                <div style="font-size:0.80rem; color:#92400E; line-height:1.6;">
+                    • <b>适用对象</b>：风险 20% ~ 50%（切点 P ≥ 0.270）；<br/>
+                    • <b>核心目标</b>：逆转久坐倾向，防范跌倒复发；<br/>
+                    • <b>干预路径</b>：家庭医生签约建档，推行“坐45动5分”零食运动法则，动员参与社区太极或八段锦团队，实施同伴结对打卡。
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with s_c3:
+            st.markdown("""
+            <div style="background:var(--crimson-bg); border:1px solid rgba(239,68,68,0.3); border-radius:12px; padding:16px;">
+                <div style="color:#991B1B; font-weight:700; font-size:0.95rem; margin-bottom:8px;">三级预防：高危重度专科靶向</div>
+                <div style="font-size:0.80rem; color:#B91C1C; line-height:1.6;">
+                    • <b>适用对象</b>：预测风险 ≥ 50% 极重高危老年人；<br/>
+                    • <b>核心目标</b>：阻断认知迅速衰退与重度失能；<br/>
+                    • <b>干预路径</b>：转诊三甲医院老年科/康复科，全面评估心肺与下肢肌力，定制抗阻微训练，纠正贫血与营养不良，家庭环境无障碍改造。
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.write("")
+        st.markdown("""
+        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:18px;">
+            <div style="font-weight:700; font-size:0.98rem; margin-bottom:8px; color:var(--text-primary);">🥋 适老化微运动（Exercise Snacks）核心动作处方：</div>
+            <div style="font-size:0.83rem; color:var(--text-secondary); line-height:1.65;">
+                1. <b>扶椅微蹲（Chair Squat）</b>：双手轻扶椅背，双脚与肩同宽，慢速下蹲至大腿与地面呈45度，每组8次，每日2组。强健股四头肌，增强防跌倒平衡力；<br/>
+                2. <b>坐姿提踵（Seated Calf Raise）</b>：端坐座椅前三分之一，双足脚尖着地，用力抬高脚后跟维持3秒后缓慢放下，每组15次。激活“人体第二心脏”小腿比目鱼肌，加速血液回流；<br/>
+                3. <b>八段锦·两手托天理三焦</b>：晨起或久坐后配合深长呼吸双手上托，拉伸胸廓与脊柱，促进脑部供血供氧。
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1073,8 +940,8 @@ with tab_guideline:
 # Footer
 # ---------------------------------------------------------------------------
 st.markdown("""
-<div style="text-align:center; padding:2rem 0 1rem; color:var(--text-muted); font-size:0.78rem;">
-    © 2026 赣南医科大学社区老年健康智能医学研究中心 · SCD-ActiPredict AI Platform v2.4 Pro<br>
-    All Rights Reserved · Powered by Streamlit & Plotly
+<div style="text-align:center; padding-top:25px; font-size:0.78rem; color:#94A3B8;">
+    SCD-ActiPredict AI v2.0 · 临床级 6 项核心独立特征决策系统 · 基于 TRIPOD+AI 2024 指南规范设计<br/>
+    仅供科研流调、临床辅助决策与教学演示使用 · 不可替代专业执业医师现场诊断
 </div>
 """, unsafe_allow_html=True)
