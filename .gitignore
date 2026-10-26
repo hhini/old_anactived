@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Editor & OS temporary files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+.git_backup/
+
+# Streamlit local state
+.streamlit/secrets.toml
+
+# ==============================================================================
+# CONFIDENTIAL RESEARCH DATA & SCIENTIFIC ASSETS (STRICTLY LOCAL, NEVER PUSH)
+# ==============================================================================
+# Raw and processed patient datasets
+data/
+data/**
+
+# All experimental analysis & thesis generation scripts
+scripts/
+scripts/**
+
+# Academic thesis documents, drafts, and notes
+doc/
+doc_dump.txt
+*.doc
+*.docx
+*.xlsx
+wolkflow.md
+
+# Intermediate research results and tables (keep only web leaderboard)
+results/*
+!results/08_multimodel_performance_comparison.csv
+
+# All research publication figures (keep strictly the 7 web UI presentation PNGs)
+figures/*
+!figures/Fig4_MultiModel_ROC_Curves_Train_and_Test.png
+!figures/Fig16_MultiModel_Radar_Performance_Comparison.png
+!figures/Fig15_MultiModel_Confusion_Matrices_Mosaic.png
+!figures/Fig17_Clinical_Risk_Stratification_and_Outcomes.png
+!figures/Fig8B_SHAP_Global_Summary_and_Beeswarm_Screened_6_Factors.png
+!figures/Fig3B_Forest_Plot_Screened_6_Independent_Factors.png
+!figures/Fig11_Clinical_Diagnostic_Nomogram.png
