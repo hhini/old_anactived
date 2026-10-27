@@ -42,6 +42,7 @@ doc_dump.txt
 *.docx
 *.xlsx
 wolkflow.md
+PROJECT_FILES_GUIDE.md
 
 # Intermediate research results and tables (keep only web leaderboard)
 results/*
